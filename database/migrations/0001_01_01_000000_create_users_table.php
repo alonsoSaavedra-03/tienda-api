@@ -15,8 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('password');
-            $table->foreignId('career_id')->constrained('careers');
+            $table->string('password')->nullable();
+            $table->foreignId('career_id')
+                ->nullable()
+                ->constrained('careers')
+                ->nullOnDelete();
             $table->boolean('terms_accepted')->default(false);
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
