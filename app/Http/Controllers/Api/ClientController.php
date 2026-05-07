@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Client;
+use App\Http\Requests\StoreClientRequest;
+use App\Http\Requests\UpdateClientRequest;
+use App\Http\Resources\ClientResource;
 use Illuminate\Http\Request;
 
 class ClientController extends Controller
@@ -12,15 +16,17 @@ class ClientController extends Controller
      */
     public function index()
     {
-        //
+        $clients = Client::all();
+        return ClientResource::collection($clients);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreClientRequest $request)
     {
-        //
+        $client = Client::create($request->validated());
+        return new ClientResource($client);
     }
 
     /**
@@ -28,15 +34,18 @@ class ClientController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        return new ClientResource($client);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateClientRequest $request, string $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $client->update($request->validated());
+        return new ClientResource($client);
     }
 
     /**
@@ -44,6 +53,8 @@ class ClientController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $client = Client::findOrFail($id);
+        $client->delete();
+        return response()->json(null, 204);
     }
 }
